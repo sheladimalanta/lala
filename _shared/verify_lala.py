@@ -14,7 +14,7 @@ AREA_EMAILS = {
     "learning": None,  # the GitHub email chosen at install time
     "personal": None,
 }
-SYSTEM_SKILLS = ("icm-workspace", "senior-dev-review")
+SYSTEM_SKILLS = ("icm-workspace", "senior-dev-review", "verify-work")
 STAGES = ("01_plan", "02_design", "03_build", "04_test", "05_deploy", "06_maintain")
 OLD_REFS = ("Life-Dashboard", "laladimalanta", "verify-core-paths", "personal-skills/")
 

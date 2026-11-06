@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verify Work"
+  short_description: "Prove code changes pass before calling them done."
+  default_prompt: "Run the tests, read the git diff, check no test was weakened, and report PASS or FAIL with evidence."

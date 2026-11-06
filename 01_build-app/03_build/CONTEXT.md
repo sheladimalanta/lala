@@ -16,6 +16,8 @@ Start from a fresh session so the build begins from the written spec.
 Open each by path from the project's `.agents/skills/`:
 `to-tickets`, `tdd`, `implement`, `diagnosing-bugs`.
 
+- `verify-work`, a system skill, after code is edited and before the work is called done
+
 ## What it does
 
 1. Split the spec into a feature list where every feature starts as failing.
@@ -27,6 +29,56 @@ Open each by path from the project's `.agents/skills/`:
    note in `work/01_build-app/03_build/progress.md`.
 5. Add the human path for cases the app cannot handle, if `intent.md` lists any.
 6. After two failed fixes, stop and restart the diagnosis. Record it in `errors.md`.
+7. Once the project has a working test command, show Shela this Stop hook, then add
+   it to the project's `.claude/settings.json` with `<test command>` filled in:
+
+   ```json
+   {
+     "hooks": {
+       "Stop": [
+         {
+           "hooks": [
+             {
+               "type": "command",
+               "command": "cd \"$CLAUDE_PROJECT_DIR\" && <test command> 1>&2 || exit 2"
+             }
+           ]
+         }
+       ]
+     }
+   }
+   ```
+
+   All test output goes to stderr. If the tests fail, the hook exits with code 2,
+   which stops Claude from finishing and gives it the failures to fix.
+   Start every `03_build` session inside the project folder, so the project's
+   `.claude/settings.json` and `$CLAUDE_PROJECT_DIR` apply.
+8. If Codex is building instead, once the project has a working test command, show
+   Shela this Stop hook, then add it to the project's `.codex/hooks.json` with
+   `<test command>` filled in:
+
+   ```json
+   {
+     "hooks": {
+       "Stop": [
+         {
+           "hooks": [
+             {
+               "type": "command",
+               "command": "python3 \"$HOME/lala/_shared/codex_stop_gate.py\" \"<test command>\"",
+               "timeout": 600
+             }
+           ]
+         }
+       ]
+     }
+   }
+   ```
+
+   The gate runs the tests from the Git root. If they fail, it gives Codex the
+   failures to fix, up to 5 times per session, then stops the session and says the
+   tests still fail. Start the session inside the project folder, and trust the hook
+   in `/hooks` before it can run.
 
 ## What it writes
 

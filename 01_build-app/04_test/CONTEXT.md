@@ -21,6 +21,17 @@ Prove the app works with evidence from something other than the session that bui
 The tool that did not build the app does the review, security check and scoring,
 read-only except for this stage's output folder.
 
+Who reviews depends on who built it:
+
+- Codex built the app: a fresh Claude Code session reviews it with `/code-review`.
+- Claude Code built it: Codex reviews it with `/review`.
+
+Both also read `git diff`, check the work against `SPEC.md`, and skip style.
+
+If Codex isn't being used, a fresh Claude Code session that did not build the app
+does the review. It starts with `/code-review` and `git diff`, checks the work
+against `SPEC.md`, and skips style.
+
 1. Review the code against `SPEC.md`.
 2. Run the tests. AI apps also run evals on the held-out set and sample transcripts.
 3. Use the app as a user would, along one real happy path and the listed exceptions.
