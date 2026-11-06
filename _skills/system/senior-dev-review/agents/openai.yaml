@@ -1,0 +1,4 @@
+interface:
+  display_name: "Senior Dev Review"
+  short_description: "Run a senior engineering review with evidence."
+  default_prompt: "Review this project like a senior developer. Read the evidence, run verifiers, list risks, and give a readiness verdict."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "SDK Project Builder"
+  short_description: "Guide robust Claude and OpenAI SDK builds"
+  default_prompt: "Use $sdk-project-builder to shape and build this SDK project through verified gates."
