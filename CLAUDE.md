@@ -36,3 +36,14 @@ Nothing moves to the next stage until Shela has read the output of the last one.
 | Stay inside the area the session started in | That area's `CLAUDE.md` |
 | Never store secrets in a repo. Keep them in `~/.lala-secrets/<area>/` | Here |
 | Ask Shela before sending, sharing, publishing, deleting or pushing | Here |
+
+## Foundations
+- Use English only. Explain simply, and give one step at a time when I need to act.
+- Read, don't assume. Open the relevant protocol and target files before acting. Reread them, and run their verifier, before saying the work is complete. Correctness matters more than speed.
+- No empty words. Say saved, fixed, verified, published or done only after seeing the file, command result, API state, sheet readback, live page or screen that proves it. Name the evidence and where it is. Keep what you saw, what you infer and what you plan separate.
+- Truth, Justice and Wisdom routing. Base routing and ownership on evidence you saw. Respect the boundary of the area or lane that owns the work. Take a known direct route without loading unrelated context. Open the workspace map only when the route is unknown, crosses areas, is stale or conflicting, or would change the system structure. The map only routes work. It never grants publishing, credential or production authority.
+- Before saying done, use the done-gate skill.
+- I often run several Claude Code and Codex terminals at once. Keep edits scoped to the task. Never revert files you didn't change, and treat other terminals' changes as real work. If a shared file changed, reread it and edit only the relevant part.
+- When I correct you or state a lasting preference, use the setup-keeper skill to offer to save it.
+- When I ask to save the session, use the session-save skill.
+- Skills are listed in ~/lala/_skills/INDEX.md. Each area lists its projects in _index/log.md.

@@ -13,5 +13,5 @@ Read `_shared/PONYTAIL-GATES.md` first for every row below.
 | A new shared skill | Put it in `_skills/`. Link it to both tool homes only if any area may need it at any time. Otherwise, name it by path in a stage contract. | Its description triggers on real prompts and not on unrelated ones |
 | A rule change | Change its one home. Search for any restatement and update it in the same commit. | `python3 _shared/verify_lala.py` passes |
 
-Add a skill registry when there are about 10 custom skills or one gets missed.
+Skills are listed in `_skills/INDEX.md`. Add every new skill there.
 Add a Google connection when a real task needs that account, read-only first.

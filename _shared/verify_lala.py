@@ -14,7 +14,9 @@ AREA_EMAILS = {
     "learning": None,  # the GitHub email chosen at install time
     "personal": None,
 }
-SYSTEM_SKILLS = ("icm-workspace", "senior-dev-review", "verify-work")
+SYSTEM_SKILLS = ("icm-workspace", "senior-dev-review", "verify-work",
+                 "done-gate", "publish-check", "external-steps", "sheet-write", "session-save",
+                 "setup-keeper")
 STAGES = ("01_plan", "02_design", "03_build", "04_test", "05_deploy", "06_maintain")
 OLD_REFS = ("Life-Dashboard", "laladimalanta", "verify-core-paths", "personal-skills/")
 
@@ -89,6 +91,15 @@ def main() -> int:
                 errors.append(f"{link} must be a symlink to {target}")
             elif not (link / "SKILL.md").is_file():
                 errors.append(f"{link} has no SKILL.md")
+
+    index = ROOT / "_skills" / "INDEX.md"
+    listed = index.read_text(encoding="utf-8") if index.is_file() else ""
+    if not listed:
+        errors.append("Missing _skills/INDEX.md")
+    for skill_md in (ROOT / "_skills").rglob("SKILL.md"):
+        rel = skill_md.parent.relative_to(ROOT).as_posix()
+        if f"`{rel}/`" not in listed:
+            errors.append(f"{rel} is not listed in _skills/INDEX.md")
 
     for path in (ROOT / "_skills").rglob("*"):
         if path.is_file() and path.suffix in {".md", ".py", ".yaml"}:

@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claude Code and Codex Guide</title>
+<style>
+/* Layout: nested boxes show where things live, then a table that becomes cards on a phone. */
+:root {
+  --bg: #eef2f6; --surface: #ffffff; --sunk: #e3e9ef; --fg: #17222e; --muted: #526171; --line: #bdc9d4;
+  --blue: #2b4fb3; --blue-soft: #e4eafa;
+  --teal: #0b7a78; --teal-soft: #dcf2f0;
+  --amber: #8a5c08; --amber-soft: #f8edd0;
+  --display: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --body: "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root {
+  --bg: #111922; --surface: #1a2531; --sunk: #233040; --fg: #e8eef4; --muted: #a6b4c2; --line: #3a4a59;
+  --blue: #a3b8f6; --blue-soft: #232f52;
+  --teal: #66d2ce; --teal-soft: #143a3b;
+  --amber: #e7c26a; --amber-soft: #3c3015;
+  color-scheme: dark;
+} }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 400 15px/1.5 var(--body); }
+.page {
+  max-width: 1400px; margin: 0 auto; padding-block: 40px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 44px;
+}
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 5vw, 42px); line-height: 1.1; font-weight: 700; letter-spacing: -.01em; }
+h2 { font-size: 25px; line-height: 1.2; font-weight: 700; }
+h3 { font-size: 16px; line-height: 1.25; font-weight: 700; }
+p { margin: 0; }
+.lead { font-size: 17px; max-width: 64ch; color: var(--muted); margin-top: 12px; }
+.sub { color: var(--muted); max-width: 66ch; margin-top: 6px; }
+code { font: 400 .9em var(--mono); overflow-wrap: anywhere; }
+
+.kinds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+.kind { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 13px 15px; display: grid; gap: 4px; align-content: start; min-width: 0; }
+.kind p { color: var(--muted); font-size: 14px; }
+.chip { display: inline-block; border-radius: 4px; padding: 2px 7px; font-size: 12.5px; font-weight: 600; margin: 2px 3px 2px 0; }
+.say { background: var(--blue-soft); color: var(--blue); }
+.can { background: var(--teal-soft); color: var(--teal); }
+.must { background: var(--amber-soft); color: var(--amber); }
+
+.map { margin-top: 18px; display: grid; gap: 12px; }
+.level { border: 1.5px solid var(--line); border-radius: 10px; padding: 14px; background: var(--surface); display: grid; gap: 10px; min-width: 0; }
+.level.in { background: var(--bg); }
+.level.in2 { background: var(--surface); }
+.head { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+.head code { color: var(--muted); }
+.head + p { color: var(--muted); font-size: 14px; }
+.items { line-height: 1.7; }
+.outer { border-color: var(--muted); }
+.flowline { color: var(--muted); font-size: 14px; text-align: center; }
+
+.load { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+
+.table-wrap { margin-top: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; table-layout: fixed; }
+th { background: var(--sunk); text-align: left; padding: 9px 10px; font-size: 12.5px; }
+td { padding: 10px; border-top: 1px solid var(--sunk); vertical-align: top; overflow-wrap: anywhere; }
+td:first-child { font-weight: 600; }
+td:nth-child(6) { background: var(--blue-soft); }
+td:nth-child(7) { background: var(--teal-soft); }
+.more td:nth-child(5) { color: var(--muted); }
+a { color: var(--blue); }
+
+.steps { padding-left: 21px; margin: 12px 0 0; display: grid; gap: 6px; }
+
+@media (max-width: 1040px) {
+  .page { padding-block: 26px 40px; gap: 34px; }
+  .kinds, .load { grid-template-columns: minmax(0, 1fr); }
+  .level { padding: 11px; }
+  thead { display: none; }
+  table, tbody, tr, td { display: block; width: 100%; }
+  tr { border-top: 1px solid var(--line); padding: 8px 0; }
+  tr:first-child { border-top: 0; }
+  td { border: 0; padding: 5px 13px; }
+  td:first-child { font-size: 15.5px; }
+  td:not(:first-child)::before { content: attr(data-label); display: block; font-size: 11.5px; font-weight: 600; color: var(--muted); }
+  td:nth-child(6), td:nth-child(7) { border-radius: 6px; margin: 4px 8px 0; width: calc(100% - 16px); padding: 7px 10px; }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <h1>Claude Code and Codex Guide</h1>
+    <p class="lead">Think of your setup as boxes inside boxes. The bigger the box, the more work its contents affect. Put each thing in the smallest box that fits.</p>
+    <p class="sub">Based on your setup files and screenshots as of November 6, 2026. Run <code>/context all</code> in Claude Code to see what's actually loaded.</p>
+  </header>
+
+  <section>
+    <h2>The three kinds of things</h2>
+    <p class="sub">Each kind has its own color in the map.</p>
+    <div class="kinds">
+      <div class="kind"><span class="chip say" style="justify-self:start">What to know</span><p>Instructions that Claude reads and usually follows, but can decide not to.</p></div>
+      <div class="kind"><span class="chip can" style="justify-self:start">What it can do</span><p>Skills, helpers and connected tools that Claude can use when a task needs them.</p></div>
+      <div class="kind"><span class="chip must" style="justify-self:start">What must happen</span><p>Settings and hooks that Claude Code applies itself. Use these for rules that can't have exceptions.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Where everything lives</h2>
+    <p class="sub">The boxes show what applies to what. On your Mac, <code>~/.claude/</code> and <code>~/lala/</code> are separate folders in your home folder.</p>
+    <div class="map">
+      <div class="level">
+        <div class="head"><h3>Your Claude account</h3><code>claude.ai</code></div>
+        <p>Sends things down to Claude Code when you sign in.</p>
+        <div class="items"><span class="chip can">13 account skills</span><span class="chip can">Connectors (off)</span><span class="chip can">Account plugins (off)</span></div>
+      </div>
+      <p class="flowline">sends down to your Mac user</p>
+      <div class="level outer">
+        <div class="head"><h3>You, in every project</h3><code>~/.claude/</code></div>
+        <p>Applies wherever you open Claude Code.</p>
+        <div class="items"><span class="chip say">CLAUDE.md</span><span class="chip say">Auto memory</span><span class="chip say">Output style</span><span class="chip can">Your skills (links)</span><span class="chip can">Subagents</span><span class="chip can">Ponytail</span><span class="chip must">settings.json</span></div>
+        <div class="level in">
+          <div class="head"><h3>Your workspace</h3><code>~/lala/</code></div>
+          <p>Holds the shared map, build steps and the real copies of your skills.</p>
+          <div class="items"><span class="chip say">CLAUDE.md</span><span class="chip say">Build steps</span><span class="chip can">_skills/</span></div>
+          <div class="level in2">
+            <div class="head"><h3>One area</h3><code>~/lala/areas/personal/</code></div>
+            <p>Personal, learning, church or Cobalt.</p>
+            <div class="items"><span class="chip say">CLAUDE.md</span><span class="chip say">CLAUDE.local.md</span><span class="chip say">.claude/rules/</span><span class="chip must">.claude/settings.json</span></div>
+            <div class="level in">
+              <div class="head"><h3>One project</h3><code>projects/my-app/</code></div>
+              <p>Added as you build an app.</p>
+              <div class="items"><span class="chip say">CLAUDE.md</span><span class="chip say">.claude/rules/</span><span class="chip can">Project skills</span><span class="chip can">Subagents</span><span class="chip must">Test hook</span><span class="chip must">.claude/settings.json</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="flowline">chosen for each session</p>
+      <div class="level">
+        <div class="head"><h3>This session</h3></div>
+        <p>Not stored in a folder you need to manage. Set it while you work.</p>
+        <div class="items"><span class="chip can">Model: /model</span><span class="chip can">Effort: /effort</span><span class="chip can">Connected tools: /mcp</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What actually loads</h2>
+    <p class="sub">Where you start Claude Code decides which folders count, so start in the area or project you're working on.</p>
+    <div class="load">
+      <div class="kind"><h3>When a session starts</h3><p><code>CLAUDE.md</code> files from your folder and the folders above it, the start of auto memory, and short lists of skills and tools.</p></div>
+      <div class="kind"><h3>When Claude needs it</h3><p>The full skill, tool details, files it reads, and rules or <code>CLAUDE.md</code> files in subfolders.</p></div>
+      <div class="kind"><h3>In the background</h3><p>Settings and hooks work outside the conversation. Subagents use their own separate workspace.</p></div>
+    </div>
+    <ol class="steps">
+      <li><strong>Should it always apply?</strong> Use the smallest <code>CLAUDE.md</code> that covers it.</li>
+      <li><strong>Is it a procedure you repeat?</strong> Make it a skill.</li>
+      <li><strong>Can it never have exceptions?</strong> Use settings or a hook.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Every location in detail</h2>
+    <p class="sub">The first six columns cover Claude Code. The last column shows the closest match in Codex. Some Codex permission features are beta or experimental, so they may change.</p>
+    <div class="table-wrap">
+      <table>
+        <colgroup><col style="width:11%"><col style="width:13%"><col style="width:10%"><col style="width:10%"><col style="width:12%"><col style="width:18%"><col style="width:26%"></colgroup>
+        <thead><tr><th>Location</th><th>What's already there</th><th>What it's for</th><th>Why it matters</th><th>Best use in your setup</th><th>How to customize it</th><th>Codex equivalent</th></tr></thead>
+        <tbody>
+          <tr><td><code>~/.claude/CLAUDE.md</code></td><td data-label="What's already there">Nothing</td><td data-label="What it's for">Your personal instructions everywhere</td><td data-label="Why it matters">Saves repeating yourself</td><td data-label="Best use in your setup">Add "English only" and "explain simply"</td><td data-label="How to customize it">Create the file, or use <code>/memory</code> to open it</td><td data-label="Codex equivalent"><strong><code>~/.codex/AGENTS.md</code></strong><br><em>There now:</em> Links to <code>~/lala/CLAUDE.md</code><br><em>Customize:</em> Edit it carefully, because editing the link changes your workspace file. To keep Codex preferences separate, replace the link with its own file and copy in what it needs</td></tr>
+          <tr><td>Workspace and area <code>CLAUDE.md</code></td><td data-label="What's already there"><code>~/lala/CLAUDE.md</code>, plus one in each of the 4 areas</td><td data-label="What it's for">Workspace and area rules</td><td data-label="Why it matters">Sends work to the right place and keeps areas separate</td><td data-label="Best use in your setup">Add only what Claude can't work out itself</td><td data-label="How to customize it">Edit the file in <code>~/lala</code> or in that area's folder</td><td data-label="Codex equivalent"><strong>Workspace and area <code>AGENTS.md</code></strong><br><em>There now:</em> Links to each <code>CLAUDE.md</code><br><em>Customize:</em> Edit the matching <code>CLAUDE.md</code>. Codex reads from the Git root down to your folder</td></tr>
+          <tr><td><code>CLAUDE.local.md</code></td><td data-label="What's already there">Nothing</td><td data-label="What it's for">Private notes for one folder</td><td data-label="Why it matters">Stays out of your repo</td><td data-label="Best use in your setup">Skip it for now</td><td data-label="How to customize it">Create it in that folder and add it to <code>.gitignore</code></td><td data-label="Codex equivalent"><strong>No direct equivalent</strong><br><em>There now:</em> Nothing<br><em>Customize:</em> <code>AGENTS.override.md</code> is closest, but it replaces that folder's <code>AGENTS.md</code> instead of adding to it</td></tr>
+          <tr><td><code>.claude/rules/</code></td><td data-label="What's already there">Nothing</td><td data-label="What it's for">Rules for certain files</td><td data-label="Why it matters">Loads only when needed</td><td data-label="Best use in your setup">Add one only when a project needs it</td><td data-label="How to customize it">Add a <code>.md</code> file in the project's <code>.claude/rules/</code> or in <code>~/.claude/rules/</code>, with a <code>paths:</code> line for the files it covers</td><td data-label="Codex equivalent"><strong>No direct equivalent</strong><br><em>There now:</em> Nothing<br><em>Customize:</em> Add an <code>AGENTS.md</code> in that subfolder. Codex <code>.rules</code> files are different: they control commands</td></tr>
+          <tr><td>Auto memory</td><td data-label="What's already there">Unknown, not checked yet</td><td data-label="What it's for">Notes Claude saves across sessions</td><td data-label="Why it matters">Avoids relearning things</td><td data-label="Best use in your setup">Remove anything wrong</td><td data-label="How to customize it">Use <code>/memory</code> to view or edit it</td><td data-label="Codex equivalent"><strong>Codex memories</strong><br><em>There now:</em> Off by default, unless you turned them on<br><em>Customize:</em> Use <code>/memories</code> for a chat, or set <code>memories = true</code> under <code>[features]</code> in <code>config.toml</code></td></tr>
+          <tr><td>Your skills</td><td data-label="What's already there"><code>icm-workspace</code>, <code>senior-dev-review</code>, <code>verify-work</code></td><td data-label="What it's for">Your own procedures</td><td data-label="Why it matters">Keep long instructions out of every session</td><td data-label="Best use in your setup">Turn tasks you've explained twice into skills</td><td data-label="How to customize it">Edit <code>SKILL.md</code> in <code>~/lala/_skills/system/&lt;skill&gt;/</code>. For a new one, add its folder there and link it into <code>~/.claude/skills</code> and <code>~/.agents/skills</code></td><td data-label="Codex equivalent"><strong><code>~/.agents/skills/</code></strong><br><em>There now:</em> The same 3 skills, using the same links<br><em>Customize:</em> Edit the same <code>SKILL.md</code>. Use <code>/skills</code> to browse them</td></tr>
+          <tr><td>Account skills</td><td data-label="What's already there">13 last time we checked, such as <code>pdf</code>, <code>docx</code>, <code>xlsx</code> and <code>docs</code></td><td data-label="What it's for">Ready-made skills from your account</td><td data-label="Why it matters">Handle common file tasks</td><td data-label="Best use in your setup">Keep them unless you want a fully local setup</td><td data-label="How to customize it">Use <code>/skills</code> to hide one here, change them on claude.ai, or set <code>syncClaudeAiSkills</code> to <code>false</code></td><td data-label="Codex equivalent"><strong>Codex bundled skills</strong><br><em>There now:</em> Includes <code>skill-creator</code> and <code>skill-installer</code>. I didn't find a matching account sync in Codex's docs<br><em>Customize:</em> Turn a skill off with <code>[[skills.config]]</code> in <code>~/.codex/config.toml</code>, then restart Codex</td></tr>
+          <tr><td>Plugin and built-in skills</td><td data-label="What's already there">6 from Ponytail, 13 built in</td><td data-label="What it's for">Extra tools from Ponytail and Claude Code</td><td data-label="Why it matters">Available without setup</td><td data-label="Best use in your setup">Use <code>code-review</code> and <code>verify-work</code> on your apps</td><td data-label="How to customize it">Use <code>/plugin</code> to manage Ponytail, and <code>/ponytail lite</code>, <code>full</code>, <code>ultra</code> or <code>off</code> to change its level</td><td data-label="Codex equivalent"><strong>Codex plugins</strong><br><em>There now:</em> Ponytail 5.3.3<br><em>Customize:</em> Use <code>/plugins</code>, and type <code>$ponytail lite</code>, <code>full</code>, <code>ultra</code> or <code>off</code> to change its level</td></tr>
+          <tr><td>Subagents (<code>.claude/agents/</code>)</td><td data-label="What's already there">None we created, though 6 agents appeared in a reload</td><td data-label="What it's for">Helpers with a separate workspace</td><td data-label="Why it matters">Keep long research out of your main chat</td><td data-label="Best use in your setup">Add a read-only <code>lesson-reader</code> if you study long lessons</td><td data-label="How to customize it">Use <code>/agents</code> to create or edit one</td><td data-label="Codex equivalent"><strong><code>~/.codex/agents/</code> or <code>.codex/agents/</code></strong><br><em>There now:</em> None we created<br><em>Customize:</em> Add a <code>.toml</code> file with <code>name</code>, <code>description</code> and <code>developer_instructions</code>. Use <code>/agents</code> to see running agents</td></tr>
+          <tr><td>Your settings (<code>~/.claude/settings.json</code>)</td><td data-label="What's already there">Connectors and account plugins off, <code>brand-guidelines</code> off, manual mode, key-folder blocks</td><td data-label="What it's for">Your rules everywhere</td><td data-label="Why it matters">Claude Code enforces them</td><td data-label="Best use in your setup">Put must-never-happen rules here</td><td data-label="How to customize it">Edit the file, or use <code>/permissions</code> for permission rules</td><td data-label="Codex equivalent"><strong><code>~/.codex/config.toml</code> and <code>~/.codex/rules/default.rules</code></strong><br><em>There now:</em> Ponytail, plus asking before <code>git push</code> and <code>rm</code><br><em>Customize:</em> Edit those files from outside Codex. Use <code>/permissions</code> for a session and <code>/debug-config</code> to check them</td></tr>
+          <tr><td>Area settings (<code>.claude/settings.json</code>)</td><td data-label="What's already there">Blocks on other areas and <code>.env</code> files, plus asking before <code>git push</code></td><td data-label="What it's for">Limits for one area</td><td data-label="Why it matters">Help keep your work separate</td><td data-label="Best use in your setup">Add a block on Cobalt edits if it needs to stay empty</td><td data-label="How to customize it">Edit the file in that area's <code>.claude</code> folder</td><td data-label="Codex equivalent"><strong>Area <code>.codex/config.toml</code></strong><br><em>There now:</em> Blocks key folders and other areas, once you trust that area<br><em>Customize:</em> Edit the file, then restart Codex in that area</td></tr>
+          <tr><td>Hooks</td><td data-label="What's already there">Ponytail's hooks only</td><td data-label="What it's for">Automatic actions and checks</td><td data-label="Why it matters">They run without Claude choosing to</td><td data-label="Best use in your setup">Add the test hook once a project has tests</td><td data-label="How to customize it">Add them to that project's <code>.claude/settings.json</code>, then check them with <code>/hooks</code></td><td data-label="Codex equivalent"><strong><code>~/.codex/hooks.json</code> or a project's <code>.codex/hooks.json</code></strong><br><em>There now:</em> Ponytail's 3 hooks. The test hook comes later<br><em>Customize:</em> Add the hook, then review and trust it with <code>/hooks</code></td></tr>
+          <tr><td>MCP servers</td><td data-label="What's already there"><code>claude-artifacts</code>, with 39 tools</td><td data-label="What it's for">Connections to outside apps</td><td data-label="Why it matters">Add abilities, but also access</td><td data-label="Best use in your setup">Connect only what a project needs</td><td data-label="How to customize it">Use <code>/mcp</code> to turn one off, or <code>claude mcp add</code> in Terminal to add one</td><td data-label="Codex equivalent"><strong><code>[mcp_servers.&lt;name&gt;]</code> in <code>config.toml</code></strong><br><em>There now:</em> None we added. Codex also lists its own apps<br><em>Customize:</em> Use <code>codex mcp add</code>, set <code>enabled = false</code> to turn one off, and use <code>/mcp</code> to view them</td></tr>
+          <tr><td>Output style</td><td data-label="What's already there">Not set</td><td data-label="What it's for">How Claude responds</td><td data-label="Why it matters">Sets a consistent format</td><td data-label="Best use in your setup">Skip it, since your <code>CLAUDE.md</code> can cover this</td><td data-label="How to customize it">Choose one in <code>/config</code>, or add a file to <code>output-styles/</code> in the project or <code>~/.claude</code></td><td data-label="Codex equivalent"><strong>No direct equivalent</strong><br><em>There now:</em> Not set<br><em>Customize:</em> Use <code>AGENTS.md</code> to describe how Codex should communicate</td></tr>
+          <tr><td>Model and effort</td><td data-label="What's already there">Opus 5.5 on Claude Pro, default effort</td><td data-label="What it's for">Model power and how hard it thinks</td><td data-label="Why it matters">Affects quality and usage</td><td data-label="Best use in your setup">Use Sonnet for routine work and Opus for hard problems</td><td data-label="How to customize it">Use <code>/model</code> and <code>/effort</code></td><td data-label="Codex equivalent"><strong><code>/model</code></strong><br><em>There now:</em> GPT-6.1-Sol, default effort on your last screen<br><em>Customize:</em> Use <code>/model</code> to choose the model and effort</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub" style="margin-top:12px">Start a new session after changing settings or files, then run <code>/context all</code> to check what loaded. You can also ask Claude Code to make these changes and show you the change first.</p>
+  </section>
+  <section>
+    <h2>Everything else</h2>
+    <p class="sub">These are extra locations you can use when a task calls for them. "Yours now" comes from your setup, not a live scan of your Mac.</p>
+    <div class="kind" style="margin-top:14px;background:var(--amber-soft);border-color:var(--amber)"><h3>About the common uses</h3><p style="color:var(--fg)">I couldn't read Reddit from this session, so nothing here is based on Reddit. The common uses come from official docs, Claude Code team tips and a few developer write-ups. They show examples, not how popular each one is. Rows marked "Official docs only" show the likely intended use, not evidence that people use it this way.</p></div>
+    <h3 style="margin-top:20px">Claude Code</h3>
+<div class="table-wrap more"><table><colgroup><col style="width:24%"><col style="width:17%"><col style="width:20%"><col style="width:27%"><col style="width:12%"></colgroup><thead><tr><th>Location</th><th>Yours now</th><th>What it's for</th><th>Commonly used for</th><th>Based on</th></tr></thead><tbody><tr><td><code>.claude/settings.local.json</code></td><td data-label="Yours now">Unknown. It may appear after a "don't ask again" approval</td><td data-label="What it's for">Your private settings for one project</td><td data-label="Commonly used for">Saved command approvals and personal overrides you don't want in Git</td><td data-label="Based on">Official docs</td></tr><tr><td><code>.mcp.json</code></td><td data-label="Yours now">None added</td><td data-label="What it's for">Connected tools shared through a project</td><td data-label="Commonly used for">Sharing tool connections with a repo. Common targets are Slack, BigQuery and Sentry</td><td data-label="Based on">Official docs, Claude Code team tips</td></tr><tr><td><code>~/.claude.json</code></td><td data-label="Yours now">Created automatically</td><td data-label="What it's for">Account details, app state, toggles and personal MCP servers</td><td data-label="Commonly used for">Managed by the app. Don't delete it</td><td data-label="Based on">Official docs</td></tr><tr><td><code>~/.claude/plugins/</code></td><td data-label="Yours now">Ponytail</td><td data-label="What it's for">Installed plugin files and data</td><td data-label="Commonly used for">Installing bundles of skills, hooks and tools</td><td data-label="Based on">Official docs</td></tr><tr><td><code>commands/*.md</code></td><td data-label="Yours now">None</td><td data-label="What it's for">Single-file prompts</td><td data-label="Commonly used for">Older form of skills, such as a <code>/techdebt</code> command. Skills are now preferred</td><td data-label="Based on">Claude Code team tips</td></tr><tr><td><code>workflows/*.js</code></td><td data-label="Yours now">None</td><td data-label="What it's for">Scripts that coordinate many subagents</td><td data-label="Commonly used for">Large jobs split across many subagents</td><td data-label="Based on">Official docs only</td></tr><tr><td><code>agent-memory/&lt;name&gt;/</code></td><td data-label="Yours now">None</td><td data-label="What it's for">Memory for one subagent</td><td data-label="Commonly used for">Letting a reviewer or researcher remember across sessions</td><td data-label="Based on">Official docs only</td></tr><tr><td><code>.worktreeinclude</code></td><td data-label="Yours now">None</td><td data-label="What it's for">Ignored files to copy into new worktrees</td><td data-label="Commonly used for">Copying <code>.env</code> into parallel sessions. The team reports running 3 to 5 worktrees at once</td><td data-label="Based on">Official docs, Claude Code team tips</td></tr><tr><td><code>keybindings.json</code></td><td data-label="Yours now">None we created</td><td data-label="What it's for">Custom keyboard shortcuts</td><td data-label="Commonly used for">Remapping keys. <code>/terminal-setup</code> handles Shift+Enter in some terminals</td><td data-label="Based on">Claude Code team tips</td></tr><tr><td><code>themes/*.json</code></td><td data-label="Yours now">None we created</td><td data-label="What it's for">Custom colors</td><td data-label="Commonly used for">Light or dark mode through <code>/config</code></td><td data-label="Based on">Official docs, Claude Code team tips</td></tr><tr><td>Status line (<code>/statusline</code>)</td><td data-label="Yours now">Not set</td><td data-label="What it's for">Information under the prompt</td><td data-label="Commonly used for">Showing the model, folder, remaining context and cost</td><td data-label="Based on">Claude Code team tips</td></tr><tr><td>Built-in output styles (<code>/config</code>)</td><td data-label="Yours now">Not set</td><td data-label="What it's for">How Claude explains its work</td><td data-label="Commonly used for">Explanatory for new codebases, and Learning to be coached through changes</td><td data-label="Based on">Claude Code team tips</td></tr><tr><td><code>env</code> in <code>settings.json</code></td><td data-label="Yours now">Not set</td><td data-label="What it's for">Environment variables for sessions</td><td data-label="Commonly used for">Setting variables without wrapper scripts</td><td data-label="Based on">Claude Code team tips</td></tr><tr><td><code>/sandbox</code></td><td data-label="Yours now">Not set up</td><td data-label="What it's for">Operating-system limits on commands</td><td data-label="Commonly used for">Isolating files and network access, with fewer prompts</td><td data-label="Based on">Claude Code team tips</td></tr><tr><td>Startup flags</td><td data-label="Yours now">Used only when you type them</td><td data-label="What it's for">Changes for one session</td><td data-label="Commonly used for"><code>--worktree</code> for parallel work, and <code>--permission-mode dontAsk</code> for sandboxed unattended runs</td><td data-label="Based on">Claude Code team tips</td></tr><tr><td><code>CLAUDE_CONFIG_DIR</code></td><td data-label="Yours now">Not set</td><td data-label="What it's for">A separate configuration folder</td><td data-label="Commonly used for">Staying signed in to work and personal accounts</td><td data-label="Based on">Official docs</td></tr><tr><td>Managed settings</td><td data-label="Yours now">None expected</td><td data-label="What it's for">Organization rules that override yours</td><td data-label="Commonly used for">Company security policies</td><td data-label="Based on">Official docs</td></tr><tr><td><code>~/.claude/projects/</code>, <code>history.jsonl</code>, <code>file-history/</code>, <code>plans/</code>, <code>debug/</code></td><td data-label="Yours now">Created as you work</td><td data-label="What it's for">Session records, prompt history, rewind snapshots, plans and logs</td><td data-label="Commonly used for">Resume and rewind. These are plain text, so keep secrets out of sessions</td><td data-label="Based on">Official docs</td></tr></tbody></table></div>
+    <h3 style="margin-top:20px">Codex</h3>
+<div class="table-wrap more"><table><colgroup><col style="width:24%"><col style="width:17%"><col style="width:20%"><col style="width:27%"><col style="width:12%"></colgroup><thead><tr><th>Location</th><th>Yours now</th><th>What it's for</th><th>Commonly used for</th><th>Based on</th></tr></thead><tbody><tr><td><code>AGENTS.override.md</code></td><td data-label="Yours now">None</td><td data-label="What it's for">Replaces that folder's <code>AGENTS.md</code></td><td data-label="Commonly used for">Temporary or stricter instructions for one folder</td><td data-label="Based on">Official docs</td></tr><tr><td><code>project_doc_fallback_filenames</code>, <code>project_doc_max_bytes</code></td><td data-label="Yours now">Not set</td><td data-label="What it's for">Other instruction filenames and the size limit</td><td data-label="Commonly used for">Reading other teams' instruction files. Write-ups suggest short files, around 30 lines</td><td data-label="Based on">Official docs, Developer write-up</td></tr><tr><td>Project <code>.agents/skills/</code></td><td data-label="Yours now">None yet</td><td data-label="What it's for">Skills for one repo</td><td data-label="Commonly used for">Repeated repo tasks, such as a migration or PR review</td><td data-label="Based on">Developer write-up</td></tr><tr><td><code>[agents]</code> in <code>config.toml</code></td><td data-label="Yours now">Not set</td><td data-label="What it's for">Global subagent limits</td><td data-label="Commonly used for">Limiting threads and depth for read-only reviewers or parallel work</td><td data-label="Based on">Developer write-up</td></tr><tr><td><code>~/.codex/&lt;name&gt;.config.toml</code> and <code>--profile</code></td><td data-label="Yours now">None</td><td data-label="What it's for">Saved sets of settings</td><td data-label="Commonly used for">Switching settings for a kind of work. I found no concrete example</td><td data-label="Based on">Official docs only</td></tr><tr><td><code>-c key=value</code></td><td data-label="Yours now">Used only when you type it</td><td data-label="What it's for">One-off setting changes</td><td data-label="Commonly used for">Trying a setting for one run</td><td data-label="Based on">Official docs only</td></tr><tr><td><code>/etc/codex/config.toml</code>, <code>requirements.toml</code></td><td data-label="Yours now">None expected</td><td data-label="What it's for">System config and admin-enforced limits</td><td data-label="Commonly used for">Company rules</td><td data-label="Based on">Official docs only</td></tr><tr><td><code>apps.&lt;id&gt;.enabled</code></td><td data-label="Yours now">Not set</td><td data-label="What it's for">Turns a Codex app or connector on or off</td><td data-label="Commonly used for">Keeping unused connections off</td><td data-label="Based on">Official docs only</td></tr><tr><td><code>marketplaces.&lt;name&gt;</code></td><td data-label="Yours now">Ponytail added by command</td><td data-label="What it's for">Plugin sources</td><td data-label="Commonly used for">Installing shared plugins from Git or a local folder</td><td data-label="Based on">Official docs, Developer write-up</td></tr><tr><td><code>notify</code></td><td data-label="Yours now">Not set</td><td data-label="What it's for">Runs a command for notifications</td><td data-label="Commonly used for">Alerting you outside Codex</td><td data-label="Based on">Official docs only</td></tr><tr><td><code>features.*</code></td><td data-label="Yours now">Defaults, unless changed</td><td data-label="What it's for">Turns features such as hooks and memories on or off</td><td data-label="Commonly used for">Enabling or disabling optional features</td><td data-label="Based on">Official docs only</td></tr><tr><td><code>shell_environment_policy</code></td><td data-label="Yours now">Not set</td><td data-label="What it's for">Controls which environment variables commands receive</td><td data-label="Commonly used for">Keeping secrets out of commands</td><td data-label="Based on">Official docs only</td></tr><tr><td><code>history.*</code>, <code>log_dir</code></td><td data-label="Yours now">Defaults</td><td data-label="What it's for">Session history and logs</td><td data-label="Commonly used for">Limiting history size and moving logs</td><td data-label="Based on">Official docs only</td></tr></tbody></table></div>
+    <h3 style="margin-top:20px">Other parts of your setup</h3>
+<div class="table-wrap more"><table><colgroup><col style="width:24%"><col style="width:17%"><col style="width:20%"><col style="width:27%"><col style="width:12%"></colgroup><thead><tr><th>Location</th><th>Yours now</th><th>What it's for</th><th>Commonly used for</th><th>Based on</th></tr></thead><tbody><tr><td><code>~/.gitconfig</code></td><td data-label="Yours now">Lala identities</td><td data-label="What it's for">Commit email per folder</td><td data-label="Commonly used for">Separate work and personal Git identities</td><td data-label="Based on">Your setup</td></tr><tr><td><code>~/.zshrc</code></td><td data-label="Yours now">Adds <code>~/.local/bin</code> to PATH</td><td data-label="What it's for">Lets Terminal find <code>claude</code> and <code>codex</code></td><td data-label="Commonly used for">PATH and shell aliases</td><td data-label="Based on">Your setup</td></tr><tr><td><code>~/.ssh/config</code></td><td data-label="Yours now">GitHub key settings, if you finished the passphrase step</td><td data-label="What it's for">Keeps your passphrase in Keychain</td><td data-label="Commonly used for">Choosing keys per host</td><td data-label="Based on">Your setup</td></tr><tr><td><code>~/.config/ponytail/</code></td><td data-label="Yours now">Only if you save a default level</td><td data-label="What it's for">Ponytail's default level</td><td data-label="Commonly used for">Setting a default level</td><td data-label="Based on">Ponytail source code</td></tr><tr><td><code>~/.lala-secrets/</code></td><td data-label="Yours now">Empty folder</td><td data-label="What it's for">Passwords and API keys for each area</td><td data-label="Commonly used for">Keeping secrets out of repos</td><td data-label="Based on">Your setup</td></tr></tbody></table></div>
+    <p class="sub" style="margin-top:14px">Sources: <a href="https://code.claude.com/docs/en/claude-directory">Claude Code directory</a>, <a href="https://support.claude.com/en/articles/14554000-claude-code-power-user-tips">Claude Code power user tips</a>, <a href="https://www.theneuron.ai/explainer-articles/the-claude-code-team-just-shared-how-they-actually-use-claude-code-and-its-wild/">The Neuron on the Claude Code team</a>, <a href="https://learn.chatgpt.com/docs/config-file/config-basic">Codex config basics</a>, <a href="https://learn.chatgpt.com/docs/config-file/config-reference">Codex config reference</a>, <a href="https://learn.chatgpt.com/docs/agent-configuration/agents-md">Codex AGENTS.md</a>, <a href="https://codex.danielvaughan.com/2026/04/12/codex-cli-customisation-stack-unified-system/">Codex customization stack</a> and <a href="https://dev.to/owen_fox/codex-cli-real-world-coding-workflow-the-setup-senior-devs-use-in-2026-3iha">Codex real-world workflow</a>.</p>
+  </section>
+</main>
+</body>
+</html>

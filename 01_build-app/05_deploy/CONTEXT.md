@@ -21,6 +21,8 @@ Release the app safely, using the simplest host that fits.
    the success criteria before replacing that process.
 6. Write `DILIGENCE.md`: AI's role, sources, permissions and what was verified.
 
+Before publishing anything public, use the publish-check skill.
+
 Deploying, publishing and pushing all stop for Shela's approval.
 
 ## What it writes

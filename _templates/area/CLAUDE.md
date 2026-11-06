@@ -15,4 +15,6 @@ there.
 | `pipelines/<name>/` | Standalone ICM workspaces with a fixed, repeating path. |
 | `_index/log.md` | A catalog of projects, not the record. |
 
+Add every new project to `_index/log.md`.
+
 Workspace rules are in `~/lala/CLAUDE.md`.
