@@ -13,6 +13,7 @@ description: Check finished work against evidence before claiming it. Use before
 |---|---|
 | Visual work | Open or render it and look. |
 | Code | Run the verify-work skill. |
+| Prose for people | Run the writing-style check script. |
 | Anything with a verifier | Run it. In ~/lala: `python3 ~/lala/_shared/verify_lala.py`. |
 | Live URL | Probe it before listing it. |
 | Sheet write | Read back the exact range written. |

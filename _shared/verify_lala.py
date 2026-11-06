@@ -16,7 +16,7 @@ AREA_EMAILS = {
 }
 SYSTEM_SKILLS = ("icm-workspace", "senior-dev-review", "verify-work",
                  "done-gate", "publish-check", "external-steps", "sheet-write", "session-save",
-                 "setup-keeper")
+                 "setup-keeper", "writing-style")
 STAGES = ("01_plan", "02_design", "03_build", "04_test", "05_deploy", "06_maintain")
 OLD_REFS = ("Life-Dashboard", "laladimalanta", "verify-core-paths", "personal-skills/")
 

@@ -39,6 +39,8 @@ Nothing moves to the next stage until Shela has read the output of the last one.
 
 ## Foundations
 - Use English only. Explain simply, and give one step at a time when I need to act.
+- Always give file paths in full, starting from /Users/lala/. Never shorten them, start them with ~, or make them relative.
+- For any prose written for people, such as posts, newsletters, emails, docs and copy, use the writing-style skill. Never use em dashes or exclamation points.
 - Read, don't assume. Open the relevant protocol and target files before acting. Reread them, and run their verifier, before saying the work is complete. Correctness matters more than speed.
 - No empty words. Say saved, fixed, verified, published or done only after seeing the file, command result, API state, sheet readback, live page or screen that proves it. Name the evidence and where it is. Keep what you saw, what you infer and what you plan separate.
 - Truth, Justice and Wisdom routing. Base routing and ownership on evidence you saw. Respect the boundary of the area or lane that owns the work. Take a known direct route without loading unrelated context. Open the workspace map only when the route is unknown, crosses areas, is stale or conflicting, or would change the system structure. The map only routes work. It never grants publishing, credential or production authority.
